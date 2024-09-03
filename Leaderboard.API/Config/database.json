@@ -1,0 +1,8 @@
+{
+  "DatabaseSettings": {
+    "Endpoint": "localhost",
+    "UserId": "postgres",
+    "Password": "secretpassword",
+    "Database": "db"
+  }
+}

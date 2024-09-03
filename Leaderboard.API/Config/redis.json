@@ -1,0 +1,7 @@
+{
+    "RedisSettings":
+    {
+        "Endpoint": "localhost",
+        "Password": "password"
+    }
+}
