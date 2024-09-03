@@ -18,10 +18,10 @@ public class AddUserCommandHandler(LeaderboardDbContext dbContext, IDistributedC
             Password = request.Password,
             IsAdmin = request.IsAdmin
         };
-        var dbUser = await dbContext.Users.AddAsync(user, cancellationToken);
-        var bytes = JsonSerializer.SerializeToUtf8Bytes(dbUser);
+        user = (await dbContext.Users.AddAsync(user, cancellationToken)).Entity;
+        var bytes = JsonSerializer.SerializeToUtf8Bytes(user);
         await distributedCache.SetAsync($"user-{user.Id}", bytes, token: cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
-        return dbUser.Entity;
+        return user;
     }
 }

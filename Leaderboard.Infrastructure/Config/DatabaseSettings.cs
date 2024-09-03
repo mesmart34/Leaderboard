@@ -1,4 +1,4 @@
-﻿namespace OmniStats.Common.AppConfig;
+﻿namespace Leaderboard.Infrastructure.Config;
 
 public class DatabaseSettings
 {

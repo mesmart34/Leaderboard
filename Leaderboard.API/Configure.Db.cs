@@ -1,8 +1,8 @@
 ﻿using Leaderboard.Domain.Entities;
+using Leaderboard.Infrastructure.Config;
 using Leaderboard.Infrastructure.Db;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
-using OmniStats.Common.AppConfig;
 
 namespace Leaderboard.API;
 
@@ -16,7 +16,7 @@ internal static class Db
             throw new InvalidOperationException("DB endpoint is not set");
         }
         
-        services.AddPooledDbContextFactory<LeaderboardDbContext>(options =>
+        services.AddDbContextFactory<LeaderboardDbContext>(options =>
         {
             var npgsqlBuilder = new NpgsqlDataSourceBuilder(dbConfig.GetConnectionString());
             npgsqlBuilder.EnableDynamicJson();
@@ -67,7 +67,7 @@ internal static class Db
         }
     }
 
-    internal static async Task SeedData(this LeaderboardDbContext db)
+    private static async Task SeedData(this LeaderboardDbContext db)
     {
         var hasUsers = await db.Users.AnyAsync();
         if (!hasUsers)

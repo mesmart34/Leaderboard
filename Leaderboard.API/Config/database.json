@@ -1,8 +1,8 @@
 {
   "DatabaseSettings": {
-    "Endpoint": "localhost",
+    "Endpoint": "46.151.31.181",
     "UserId": "postgres",
-    "Password": "secretpassword",
-    "Database": "db"
+    "Password": "abobus1488",
+    "Database": "Leaderboard"
   }
 }

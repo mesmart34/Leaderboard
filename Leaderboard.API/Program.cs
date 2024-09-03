@@ -9,9 +9,7 @@ builder.Services.AddControllers();
 
 builder.AddConfig();
 
-builder.Services.AddCaching(builder.Configuration);
-builder.Services.AddApp();
-builder.Services.AddDb(builder.Configuration);
+builder.AddServices();
 
 var app = builder.Build();
 

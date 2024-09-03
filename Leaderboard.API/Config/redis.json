@@ -1,7 +1,7 @@
 {
     "RedisSettings":
     {
-        "Endpoint": "localhost",
-        "Password": "password"
+        "Endpoint": "46.151.31.181",
+        "Password": "1337"
     }
 }
