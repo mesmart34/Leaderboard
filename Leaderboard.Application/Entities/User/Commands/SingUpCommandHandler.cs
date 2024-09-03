@@ -6,17 +6,16 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace Leaderboard.Application.Entities.User.Commands;
 
-public class AddUserCommandHandler(LeaderboardDbContext dbContext, IDistributedCache distributedCache) : IRequestHandler<AddUserCommand, TableUser?>
+public class SingUpCommandHandler(LeaderboardDbContext dbContext, IDistributedCache distributedCache) : IRequestHandler<SignUpCommand, TableUser?>
 {
-    public async Task<TableUser?> Handle(AddUserCommand request, CancellationToken cancellationToken)
+    public async Task<TableUser?> Handle(SignUpCommand request, CancellationToken cancellationToken)
     {
         var user = new TableUser
         {
             FirstName = request.FirstName,
             LastName = request.LastName,
             Email = request.Email,
-            Password = request.Password,
-            IsAdmin = request.IsAdmin
+            Password = request.Password
         };
         user = (await dbContext.Users.AddAsync(user, cancellationToken)).Entity;
         var bytes = JsonSerializer.SerializeToUtf8Bytes(user);

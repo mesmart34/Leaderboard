@@ -2,8 +2,8 @@
 
 public static class Configure
 {
-    private static string _configDirectory = "Config";
-    
+    private const string ConfigDirectory = "Config";
+
     public static WebApplicationBuilder AddConfig(this WebApplicationBuilder builder)
     {
         var config = builder.Configuration;
@@ -13,8 +13,9 @@ public static class Configure
         config
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
-            .AddJsonFile($"{_configDirectory}/database.json", optional: false, reloadOnChange: true)
-            .AddJsonFile($"{_configDirectory}/redis.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"{ConfigDirectory}/database.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"{ConfigDirectory}/redis.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"{ConfigDirectory}/security.json", optional: false, reloadOnChange: true)
             .AddEnvironmentVariables();
         
         return builder;

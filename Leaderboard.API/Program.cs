@@ -1,13 +1,14 @@
 using Leaderboard.API;
-using Leaderboard.Application;
+using Leaderboard.API.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddConfig();
+builder.AddAuth();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
-builder.AddConfig();
 
 builder.AddServices();
 
