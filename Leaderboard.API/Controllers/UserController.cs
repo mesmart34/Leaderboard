@@ -23,13 +23,24 @@ public class UserController(IMediator mediator) : ControllerBase
         }
         return Ok(user);
     }
+    
+    [HttpGet]
+    public async Task<ActionResult<TableUser>> GetUsers()
+    {
+        var user = await mediator.Send(new GetUsers());
+        return Ok(user);
+    }
 
     [HttpPost]
-    public async Task<ActionResult<TableUser>> AddUser()
+    public async Task<ActionResult<TableUser>> AddUser([FromBody]AddUserCommand userCommand)
     {
         var user = await mediator.Send(new AddUserCommand()
         {
-            
+            FirstName = userCommand.FirstName,
+            LastName = userCommand.LastName,
+            Email = userCommand.Email,
+            Password = userCommand.Password,
+            IsAdmin = userCommand.IsAdmin
         });
         return Ok(user);
     }
