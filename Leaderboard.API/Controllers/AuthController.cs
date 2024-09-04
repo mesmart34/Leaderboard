@@ -1,9 +1,10 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Leaderboard.API.Authorization.Config;
-using Leaderboard.Application.Entities.User.Commands;
-using Leaderboard.Application.Entities.User.Queries;
-using Leaderboard.Application.Entities.User.Response;
+using Leaderboard.Application.Contracts;
+using Leaderboard.Application.Entities.Auth.Commands.AuthRegister;
+using Leaderboard.Application.Entities.Auth.Queries;
+using Leaderboard.Application.Entities.Auth.Queries.AuthLogin;
 using Leaderboard.Infrastructure.Db;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -15,68 +16,35 @@ using TGolla.Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Leaderboard.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("auth")]
 [ApiController]
 [SwaggerControllerOrder(1)]
-public class AuthController(LeaderboardDbContext dbContext, IConfiguration configuration, IMediator mediator) : ControllerBase
+public class AuthController(IAuthService authService) : ControllerBase
 {
-    [HttpPost]
+    [HttpPost("register")]
     [AllowAnonymous]
-    [SwaggerOperation("Sign up")]
-    public async Task<IActionResult> SignUp([FromQuery]SignUpCommand request)
+    [SwaggerOperation("Register")]
+    public async Task<IActionResult> Register([FromBody]AuthRegisterCommand command)
     {
-        var user = await dbContext.Users.FirstOrDefaultAsync(x => x.Email == request.Email);
-        if (user != null)
+        var registered = await authService.Register(command);
+        if (registered)
         {
-            return Ok("User with the same email has already been registered!");
+            return Problem("User already exists");
         }
-    
-        user = await mediator.Send(new SignUpCommand()
-        {
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            Email = request.Email,
-            Password = request.Password
-        });
-    
-        if (user == null)
-        {
-            throw new Exception("Couldn't add the entity to db");
-        }
+
         return Ok();
     }
     
-    [HttpGet]
+    [HttpPost("login")]
     [AllowAnonymous]
-    [SwaggerOperation("Sign In")]
-    public async Task<ActionResult<AuthResponse>> SignIn([FromQuery]SingInQuery request)
+    [SwaggerOperation("Login")]
+    public async Task<ActionResult<AuthLoginResponse>> Login([FromBody]AuthLoginQuery command)
     {
-        var user = await mediator.Send(request);
-    
-        if (user == null)
+        var response = await authService.Login(command);
+        if (response == null)
         {
-            return NotFound();
+            return NotFound("User not found");
         }
-            
-        var jwtConfig = configuration.GetSection(JwtSettings.ConfigSection).Get<JwtSettings>();
-        if (jwtConfig == null)
-        {
-            return BadRequest();
-        }
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.Key));
-        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-    
-        var secToken = new JwtSecurityToken(jwtConfig.Issuer,
-            jwtConfig.Issuer,
-            null,
-            expires: DateTime.Now.AddMinutes(120),
-            signingCredentials: credentials);
-    
-        var token =  new JwtSecurityTokenHandler().WriteToken(secToken);
-    
-        return new AuthResponse()
-        {
-            Token = token
-        };
+        return response;
     }
 }

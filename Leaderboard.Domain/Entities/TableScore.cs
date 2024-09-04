@@ -8,6 +8,7 @@ public class TableScore : IHasId, IHasDateCreatedAndUpdated, IHasUserUpdatedAndC
     
     public Guid ActivityId { get; set; }
     public virtual TableActivity Activity { get; set; } = null!;
+    public int Value { get; set; }
     
     public DateTime PeriodStart { get; set; }
     public DateTime PeriodEnd { get; set; }

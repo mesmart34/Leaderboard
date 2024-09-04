@@ -3,9 +3,9 @@ using Leaderboard.Domain.Entities;
 using MediatR;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace Leaderboard.Application.Entities.User.Commands;
+namespace Leaderboard.Application.Entities.Auth.Commands.AuthRegister;
 
-public class SignUpCommand : IRequest<TableUser?>
+public class AuthRegisterCommand : IRequest<TableUser?>
 {
     [Required]
     [SwaggerSchema("First name")]

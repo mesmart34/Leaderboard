@@ -4,18 +4,18 @@ using Leaderboard.Infrastructure.Db;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace Leaderboard.Application.Entities.User.Commands;
+namespace Leaderboard.Application.Entities.Auth.Commands.AuthRegister;
 
-public class SingUpCommandHandler(LeaderboardDbContext dbContext, IDistributedCache distributedCache) : IRequestHandler<SignUpCommand, TableUser?>
+public class AuthRegisterCommandHandler(LeaderboardDbContext dbContext, IDistributedCache distributedCache) : IRequestHandler<AuthRegisterCommand, TableUser?>
 {
-    public async Task<TableUser?> Handle(SignUpCommand request, CancellationToken cancellationToken)
+    public async Task<TableUser?> Handle(AuthRegisterCommand command, CancellationToken cancellationToken)
     {
         var user = new TableUser
         {
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            Email = request.Email,
-            Password = request.Password
+            FirstName = command.FirstName,
+            LastName = command.LastName,
+            Email = command.Email,
+            Password = command.Password
         };
         user = (await dbContext.Users.AddAsync(user, cancellationToken)).Entity;
         var bytes = JsonSerializer.SerializeToUtf8Bytes(user);

@@ -1,6 +1,31 @@
-@Leaderboard.Api_HostAddress = http://localhost:5109
+@ApiHost = http://localhost:5109
 
-GET {{Leaderboard.Api_HostAddress}}/weatherforecast/
+### Authenticate
+< {%
+    client.global.clear("auth_token");
+%}
+POST {{ApiHost}}/auth
 Accept: application/json
+Content-Type: application/json
+
+{
+  "Email": "user1@email.com",
+  "Password": "123"
+}
+
+> {%
+    client.assert(response.status === 200);
+    client.global.set("auth_token", response.body.token.toString());
+%}
+
+###
+
+### Get activity
+GET {{ApiHost}}/activity
+Authorization: Bearer {{auth_token}}
+
+> {%
+    client.assert(response.status === 200);
+%}
 
 ###
